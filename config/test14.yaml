@@ -1,0 +1,52 @@
+meta:
+  reader: BasicReader
+  processor: BasicProcessor
+  pipeline: BasicPipeline
+  model:
+    - SpellBERT
+  optimizer: AdamW
+  # scheduler: get_linear_schedule_with_warmup
+  scheduler: null
+  criterion: CrossEntropyLossWithMask
+  mode: train
+
+dataset:
+  train:
+    file: resources/data/trainall.times2.pkl
+    batch_size: 64
+  test14:
+    file: resources/data/test.sighan14.pkl
+    batch_size: 128
+
+train:
+  epoch: 10
+  gradient_step: 1
+  max_step: 0
+
+model:
+  pretrained_model: ./resources/pretrained_onlybert
+
+optimizer:
+  lr: 0.00002
+  weight_decay: 0.0
+  eps: 0.00000001
+  num_warmup_steps: 0
+  max_grad_norm: 1.0
+
+metric:
+  train:
+    - CharCorrectPRFMetric
+    - SentCorrectPRFMetric
+    - CharDetectPRFMetric
+    - SentDetectPRFMetric
+  test14:
+    - CharCorrectPRFMetric
+    - SentCorrectPRFMetric
+    - CharDetectPRFMetric
+    - SentDetectPRFMetric
+
+output:
+  directory: ./output/test15
+
+debug:
+  epoch_step: 0

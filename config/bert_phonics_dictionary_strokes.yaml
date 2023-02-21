@@ -1,0 +1,54 @@
+meta:
+  fallback: config/hybrid.yaml
+  scheduler: get_linear_schedule_with_warmup
+  model:
+    - SpellBERT
+    - WordClassifier
+    - GlyphClassifier
+  criterions:
+    - class: CrossEntropyLossWithMask
+      weight: 1.0
+    - class: InfoNCELossForCSC
+      weight: 0.1
+      kwargs:
+        negative_sample: 8
+        temperature: 1
+    - class: CrossEntropyLossWithMask
+      weight: 0.05
+    - class: CrossEntropyLossWithMask
+      weight: 0.05
+  no_cache: True
+  multi_explanation: 0
+  use_word_dict: True
+  use_glyph: True
+  use_part: True
+  use_mean_pooling: True
+  fixed_encoder: True
+
+dataset:
+  train:
+    file: resources/data/trainall.times2.pkl
+    batch_size: 32
+  test15:
+    file: resources/data/test.sighan15.pkl
+    batch_size: 128
+  test14:
+    file: resources/data/test.sighan14.pkl
+    batch_size: 128
+  test13:
+    file: resources/data/test.sighan13.pkl
+    batch_size: 128
+
+model:
+  pretrained_model: ./resources/pretrained_onlybert
+  glyph_model: ./resources/glyph
+
+optimizer:
+  lr: 0.00005
+  weight_decay: 0.0
+  eps: 0.00000001
+  num_warmup_steps: 8000
+  max_grad_norm: 1.0
+
+output:
+  directory: ./output/hybrid_glyph_part_fixed_schedule

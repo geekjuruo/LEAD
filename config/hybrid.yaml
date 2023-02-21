@@ -1,0 +1,48 @@
+meta:
+  fallback: ./config/default.yaml
+  reader: HybridReader
+  processor: HybridProcessor
+  pipeline: HybridPipeline
+  model:
+    - SpellBERT
+    - WordClassifier
+  criterions:
+    -
+      class: CrossEntropyLossWithMask
+      weight: 1.0
+    -
+      class: InfoNCELossForCSC
+      weight: 0.25
+      kwargs:
+        negative_sample: 8
+        temperature: 1
+    -
+      class: CrossEntropyLossWithMask
+      weight: 0.1
+  mode: train
+  no_cache: True
+  expansion_times: 2
+  share_encoder: False
+  fixed_encoder: False
+  multi_explanation: 0
+
+dataset:
+  train:
+    file: resources/data/trainall.times2.pkl
+    batch_size: 20
+  test15:
+    file: resources/data/test.sighan15.pkl
+    batch_size: 48
+
+extra_dataset:
+  confusion_file: resources/confusion.txt
+  dict_file: resources/dictionary_word.json
+  negative_sample: 7
+  select_negative: False
+  positive_sample: 1
+
+model:
+  pretrained_model: ./resources/pretrained_onlybert
+
+output:
+  directory: ./output/hybrid
