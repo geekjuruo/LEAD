@@ -8,7 +8,7 @@ import hanlp
 import numpy as np
 from tqdm import tqdm
 
-from reader.BasicReaderWithDict import BasicReader
+from reader.BasicReader import BasicReader
 from utils._global import _global
 
 
